@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Prata&display=swap');
+
+@import "tailwindcss";
+
+*{
+  font-family: Outfit;}
+
+.prata-regular {
+  font-family: "Prata", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+a.active hr {
+  display: block;
+}
+
+.bg-offwhite {
+  background-color: #e7e1d8;
+}
+
+.bg-lightoffwhite {
+  background-color: '#f8f8f4';
+}
+
+
