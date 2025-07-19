@@ -17,7 +17,7 @@ const Product = () => {
     const item = products.find((item) => item._id === productid);
     if (item) {
       setProductData(item);
-      setImage(item.image[0]);
+      setImage(item.images[0]);
     }
   }, [productid, products]);
 
@@ -27,21 +27,21 @@ const Product = () => {
       <div className='flex gap-12 sm:gap-12 flex-col sm:flex-row'>
         {/* ---------------Product Images----------------- */}
         <div className='flex-1 flex flex-col-reverse gap-3 sm:flex-row'>
-          <div className='flex flex-col overflow-x-auto sm:overflow-scroll justify-between sm:w-[18.7%] w-full'>
+          <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-auto justify-start sm:justify-start sm:w-[18.7%] w-full sm:max-h-[500px] gap-2 sm:gap-3'>
             {
-              productData.image.map((item, index) => (
+              productData.images.map((item, index) => (
                 <img
                   onClick={() => setImage(item)}
                   src={item}
                   key={index}
-                  className='w-[24%] sm:w-full sm:mb-3 flex-shrink-0 cursor-pointer'
+                  className='w-[24%] sm:w-full aspect-square object-cover flex-shrink-0 cursor-pointer border-2 border-transparent hover:border-gray-300 transition-all duration-200 rounded'
                   alt=''
                 />
               ))
             }
           </div>
-          <div className='w-full sm:w-[80%] '>
-            <img src={image} className='w-full h-auto' alt='loading...' />
+          <div className='w-full sm:w-[78%]'>
+            <img src={image} className='w-full h-auto object-cover rounded' alt='loading...' />
           </div>
         </div>
 
@@ -63,7 +63,7 @@ const Product = () => {
             <p>Select Size</p>
             <div className='flex gap-2 flex-wrap'>
               {
-                productData.size.map((item, index) => (
+                productData.sizes.map((item, index) => (
                   <button
                     onClick={() => setSize(item)}
                     key={index}
