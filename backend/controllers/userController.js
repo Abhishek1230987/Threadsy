@@ -17,21 +17,31 @@ const createAdminToken = (email) => {
   return jwt.sign({ email, role: "admin" }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// Route: POST /api/users/login
+// Route: POST /api/user/login
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await userModel.findOne({ email });
+    // Trim whitespace and convert email to lowercase for consistency
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedPassword = password.trim();
+
+    console.log('Login attempt for email:', trimmedEmail);
+
+    const user = await userModel.findOne({ email: trimmedEmail });
     if (!user) {
+      console.log('User not found for email:', trimmedEmail);
       return res.json({ success: false, message: 'User does not exist' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('User found, comparing passwords...');
+    const isMatch = await bcrypt.compare(trimmedPassword, user.password);
     if (isMatch) {
       const token = createToken(user._id);
+      console.log('Login successful for email:', trimmedEmail);
       return res.status(200).json({ success: true, user, token });
     } else {
+      console.log('Password mismatch for email:', trimmedEmail);
       return res.json({ success: false, message: 'Invalid credentials' });
     }
 
@@ -41,21 +51,29 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Route: POST /api/users/register
+// Route: POST /api/user/register
 const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const exists = await userModel.findOne({ email });
+    // Trim whitespace and convert email to lowercase for consistency
+    const trimmedEmail = email.trim().toLowerCase();
+    const trimmedPassword = password.trim();
+    const trimmedName = name.trim();
+
+    console.log('Registration attempt for email:', trimmedEmail);
+
+    const exists = await userModel.findOne({ email: trimmedEmail });
     if (exists) {
+      console.log('User already exists for email:', trimmedEmail);
       return res.json({ success: false, message: 'User already exists' });
     }
 
-    if (!validator.isEmail(email)) {
+    if (!validator.isEmail(trimmedEmail)) {
       return res.json({ success: false, message: 'Please enter a valid email address' });
     }
 
-    if (password.length < 8 || !validator.isStrongPassword(password)) {
+    if (trimmedPassword.length < 8 || !validator.isStrongPassword(trimmedPassword)) {
       return res.json({
         success: false,
         message: 'Password must be at least 8 characters long and include a mix of letters, numbers, and symbols'
@@ -63,10 +81,16 @@ const registerUser = async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
+    const hashedPassword = await bcrypt.hash(trimmedPassword, salt);
 
-    const newUser = new userModel({ name, email, password: hashedPassword });
+    const newUser = new userModel({ 
+      name: trimmedName, 
+      email: trimmedEmail, 
+      password: hashedPassword 
+    });
     const user = await newUser.save();
+
+    console.log('User registered successfully for email:', trimmedEmail);
 
     const token = createToken(user._id);
 
