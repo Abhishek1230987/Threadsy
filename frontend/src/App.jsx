@@ -14,7 +14,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { ShopContext } from "./context/ShopContext";
+import Verify from "./pages/verify";
 
 const App = () => {
   const { token } = useContext(ShopContext);
@@ -49,6 +51,10 @@ const App = () => {
             <Route
               path="/placeorder"
               element={token ? <PlaceOrder /> : <Navigate to="/login" />}
+            />
+            <Route
+              path="/verify"
+              element={token ? <Verify /> : <Navigate to="/login" />}
             />
           </Routes>
         </div>

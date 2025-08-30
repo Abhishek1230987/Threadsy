@@ -87,7 +87,12 @@ const Navbar = () => {
                     My Profile
                   </p>
                   <Link to="/orders">
-                    <p className="cursor-pointer hover:text-gray-400">Orders</p>
+                    <p
+                      onClick={() => navigate("/orders")}
+                      className="cursor-pointer hover:text-gray-400"
+                    >
+                      Orders
+                    </p>
                   </Link>
                   <p
                     onClick={logout}
