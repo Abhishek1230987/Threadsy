@@ -1,12 +1,12 @@
 import React, { useEffect, useContext } from "react";
-import { ShopContext } from "../context/shopContext";
+import { ShopContext } from "../context/ShopContext";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 const Verify = () => {
   const navigate = useNavigate();
-  const { token, setCartItem, backendUrl } = useContext(ShopContext);
+  const { token, setCartItems, backendUrl } = useContext(ShopContext);
   const [searchParams] = useSearchParams();
 
   const success = searchParams.get("success");
@@ -18,13 +18,13 @@ const Verify = () => {
         if (!token) return;
 
         const response = await axios.post(
-          backendUrl + "/api/order/verifyStripe", 
+          backendUrl + "/api/order/verifyStripe",
           { success, orderId },
           { headers: { token } }
         );
 
         if (response.data.success) {
-          setCartItem({});
+          setCartItems({});
           navigate("/orders");
         } else {
           navigate("/cart");
@@ -36,7 +36,7 @@ const Verify = () => {
     };
 
     verifyPayment();
-  }, [token, success, orderId, backendUrl, navigate, setCartItem]);
+  }, [token, success, orderId, backendUrl, navigate, setCartItems]);
 
   return <div></div>;
 };
