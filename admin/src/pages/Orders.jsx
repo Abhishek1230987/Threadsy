@@ -19,7 +19,6 @@ const Orders = ({ token }) => {
           headers: { token },
         }
       );
-      console.log(response.data);
       if (response.data.success) {
         setOrders(response.data.orders.reverse());
       } else {
@@ -40,18 +39,18 @@ const Orders = ({ token }) => {
       orderId,
       newStatus: event.target.value,
       backendUrl,
-      token: token ? "Token exists" : "No token"
+      token: token ? "Token exists" : "No token",
     });
-    
+
     try {
       const response = await axios.post(
         backendUrl + "/api/order/status",
         { orderId, status: event.target.value },
         { headers: { token } }
       );
-      
+
       console.log("Backend response:", response.data);
-      
+
       if (response.data.success) {
         await fetchAllOrders();
         toast.success("Order status updated successfully!");
@@ -61,7 +60,10 @@ const Orders = ({ token }) => {
     } catch (error) {
       console.log("Status update error:", error);
       console.log("Error response:", error.response?.data);
-      toast.error("Failed to update order status: " + (error.response?.data?.message || error.message));
+      toast.error(
+        "Failed to update order status: " +
+          (error.response?.data?.message || error.message)
+      );
     }
   };
 
